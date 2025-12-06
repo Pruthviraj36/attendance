@@ -1,6 +1,4 @@
-from app import create_app
-from extensions import db
-from models import Faculty, Slot
+from app import create_app, db, Faculty, Slot
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 
@@ -28,9 +26,12 @@ def create_triggers(db_session):
 
 def create_admin(db_session):
     """Create the default admin user."""
-    admin = Faculty(name='Admin', email='admin@univ.edu', subject='Administration', 
-                    password_hash=generate_password_hash('admin123'))
-    db_session.add(admin)
+    # check if admin exists
+    existing = Faculty.query.filter_by(email='admin@univ.edu').first()
+    if not existing:
+        admin = Faculty(name='Admin', email='admin@univ.edu', subject='Administration', 
+                        password_hash=generate_password_hash('admin123'))
+        db_session.add(admin)
 
 app = create_app()
 
@@ -42,7 +43,14 @@ with app.app_context():
     
     # Re-create Triggers
     print("Creating triggers...")
-    create_triggers(db.session)
+    try:
+        # Check if using postgresql 
+        if 'postgresql' in app.config.get('SQLALCHEMY_DATABASE_URI', ''):
+             create_triggers(db.session)
+        else:
+            print("Skipping triggers (Not PostgreSQL)")
+    except Exception as e:
+        print(f"Error creating triggers: {e}")
 
     # Create Admin
     print("Creating Admin user...")
