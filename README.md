@@ -82,7 +82,7 @@ GOOGLE_DRIVE_FOLDER_ID=your_drive_folder_id
 
 6.  **Run the Application**:
     ```powershell
-    python setup_build.py
+    python wizard.py
     ```
     Access the app at `http://127.0.0.1:5000`
 
@@ -119,6 +119,6 @@ GOOGLE_DRIVE_FOLDER_ID=your_drive_folder_id
 
 6.  **Run the Application**:
     ```bash
-    python3 setup_build.py
+    python3 wizard.py
     ```
     Access the app at `http://127.0.0.1:5000`
