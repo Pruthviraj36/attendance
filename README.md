@@ -109,11 +109,15 @@ GOOGLE_DRIVE_FOLDER_ID=your_folder_id_here
     ```
 4.  **Initialize Database**:
     ```powershell
+<<<<<<< HEAD
     python reset_db.py
+=======
+    python wizard.py
+>>>>>>> bd8f019b895f5d3c98a0962a0b585c020f1ad067
     ```
 5.  **Run Application**:
     ```powershell
-    python app.py
+    python wizard.py
     ```
 
 ### Installation Steps (macOS / Linux)
@@ -132,11 +136,15 @@ GOOGLE_DRIVE_FOLDER_ID=your_folder_id_here
     ```
 4.  **Initialize Database**:
     ```bash
+<<<<<<< HEAD
     python3 reset_db.py
+=======
+    python3 wizard.py
+>>>>>>> bd8f019b895f5d3c98a0962a0b585c020f1ad067
     ```
 5.  **Run Application**:
     ```bash
-    python3 app.py
+    python3 wizard.py
     ```
 
 Access the app at `http://127.0.0.1:5000`
