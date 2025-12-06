@@ -1,0 +1,23 @@
+# Web Framework
+flask
+flask-sqlalchemy
+flask-login
+flask-mail
+flask-migrate
+flask-talisman
+
+# Data Processing
+pandas
+openpyxl
+
+# Google API
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+
+# Configuration
+python-dotenv
+
+# Build
+pyinstaller
+

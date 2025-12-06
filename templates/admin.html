@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}
+
+{% block content %}
+<div x-data="{ activeModal: null }">
+    <div class="flex justify-between items-center mb-8 animate-fade-in">
+        <div>
+            <h2 class="text-3xl font-bold text-white mb-1">Admin Dashboard</h2>
+            <p class="text-white/60">Manage students and faculty members</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 animate-fade-in">
+        <!-- CSV Upload Card -->
+        <div class="glass-card h-full">
+            <div class="p-6">
+                <h5 class="text-xl font-bold text-white mb-6">Import Students</h5>
+                <form method="POST" enctype="multipart/form-data">
+                    <div
+                        class="relative border-2 border-dashed border-white/20 rounded-xl p-8 text-center hover:bg-white/5 hover:border-primary-500 transition-all duration-300 group cursor-pointer mb-4">
+                        <div class="mb-4 text-primary-500 group-hover:scale-110 transition-transform duration-300">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+                                viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.692 14.387 11.293 12.5 11.293H10.5a.5.5 0 0 1 0-1h2.5c1.476 0 2.75-1.274 2.75-2.793 0-1.519-1.274-2.793-2.75-2.793a.5.5 0 0 1-.5-.5c0-1.613-1.274-2.922-2.875-2.922a.5.5 0 0 1-.5.5c-1.613 0-2.875 1.309-2.875 2.922a.5.5 0 0 1-.5.5c-1.476 0-2.75 1.274-2.75 2.793 0 .156.013.31.04.46a.5.5 0 0 1-.48.54A3.5 3.5 0 0 1 0 7.773c0-1.636 1.242-2.969 2.834-3.194a5.53 5.53 0 0 1 1.572-3.237z" />
+                                <path fill-rule="evenodd"
+                                    d="M7.646 10.854a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 9.293V5.5a.5.5 0 0 0-1 0v3.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 2z" />
+                            </svg>
+                        </div>
+                        <p class="text-white/60 mb-2">Drag & Drop CSV file here</p>
+                        <input type="file" name="upload_csv"
+                            class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" accept=".csv" required>
+                    </div>
+                    <button type="submit" id="uploadBtn" class="w-full btn-secondary-glass">
+                        Upload & Import
+                    </button>
+                    <div class="mt-3 text-center">
+                        <small class="text-white/40 text-xs">Required: enrollment_no, name, roll_no, batch</small>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add Faculty Card -->
+        <div class="glass-card h-full">
+            <div class="p-6">
+                <h5 class="text-xl font-bold text-white mb-6">Add New Faculty</h5>
+                <form method="POST">
+                    <input type="hidden" name="create_faculty" value="1">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">Full
+                                Name</label>
+                            <input type="text" name="name" class="form-input-glass" required>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">Email
+                                Address</label>
+                            <input type="email" name="email" class="form-input-glass"
+                                pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label
+                                    class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">Subject</label>
+                                <input type="text" name="subject" class="form-input-glass" required>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">Password</label>
+                                <input type="password" name="password" class="form-input-glass" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="w-full btn-primary-glass mt-2">Create Account</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Faculty List -->
+    <div class="glass-card mt-8 p-6 animate-fade-in delay-100">
+        <h5 class="text-xl font-bold text-white mb-6">Faculty Members</h5>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr>
+                        <th class="p-3 text-xs font-bold text-white/50 uppercase border-b border-white/10">Name</th>
+                        <th class="p-3 text-xs font-bold text-white/50 uppercase border-b border-white/10">Email</th>
+                        <th class="p-3 text-xs font-bold text-white/50 uppercase border-b border-white/10">Subject</th>
+                        <th class="p-3 text-xs font-bold text-white/50 uppercase border-b border-white/10 text-right">
+                            Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                    {% for faculty in faculties %}
+                    <tr class="hover:bg-white/5 transition-colors">
+                        <td class="p-3 font-medium text-white">{{ faculty.name }}</td>
+                        <td class="p-3 text-white/70">{{ faculty.email }}</td>
+                        <td class="p-3">
+                            <span
+                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary-500/10 text-primary-100 border border-primary-500/20">
+                                {{ faculty.subject }}
+                            </span>
+                        </td>
+                        <td class="p-3 text-right space-x-2">
+                            <button @click="activeModal = {{ faculty.id }}"
+                                class="text-yellow-400 hover:text-yellow-300 transition-colors text-sm font-medium">Edit</button>
+                            <form action="{{ url_for('delete_faculty', id=faculty.id) }}" method="POST" class="inline">
+                                <button type="submit"
+                                    class="text-red-400 hover:text-red-300 transition-colors text-sm font-medium ml-2">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% include 'partials/edit_faculty_modal.html' %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
