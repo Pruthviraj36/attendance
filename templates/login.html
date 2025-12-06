@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+    <div class="col-md-5 col-lg-4">
+        <div class="glass-card p-5 animate-fade-in">
+            <div class="text-center mb-4">
+                <h2 class="fw-bold text-white">Welcome Back</h2>
+                <p class="text-secondary">Sign in to continue</p>
+            </div>
+            <form method="POST">
+                <div class="mb-4">
+                    <label class="form-label text-secondary small text-uppercase fw-bold">Email Address</label>
+                    <input type="email" name="email" class="form-control form-control-lg" placeholder="name@univ.edu"
+                        required>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label text-secondary small text-uppercase fw-bold">Password</label>
+                    <input type="password" name="password" class="form-control form-control-lg" placeholder="••••••••"
+                        required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 btn-lg fw-bold mt-2">Sign In</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-5 animate-fade-in">
+    <div>
+        <h2 class="fw-bold text-white mb-0">Admin Dashboard</h2>
+        <p class="text-secondary mb-0">Manage students and faculty members</p>
+    </div>
+</div>
+
+<div class="row g-4 animate-fade-in">
+    <!-- CSV Upload Card -->
+    <div class="col-md-6">
+        <div class="glass-card h-100">
+            <div class="card-body p-4">
+                <h5 class="card-title text-white fw-bold mb-4">Import Students</h5>
+                <form method="POST" enctype="multipart/form-data"
+                    onsubmit="document.getElementById('uploadBtn').innerHTML = 'Uploading...'; document.getElementById('uploadBtn').disabled = true;">
+                    <div class="upload-zone p-5 text-center mb-3"
+                        style="border: 2px dashed rgba(255,255,255,0.2); border-radius: 12px; transition: all 0.3s;">
+                        <div class="mb-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="currentColor"
+                                class="bi bi-cloud-upload text-primary" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M4.406 1.342A5.53 5.53 0 0 1 8 0c2.69 0 4.923 2 5.166 4.579C14.758 4.804 16 6.137 16 7.773 16 9.692 14.387 11.293 12.5 11.293H10.5a.5.5 0 0 1 0-1h2.5c1.476 0 2.75-1.274 2.75-2.793 0-1.519-1.274-2.793-2.75-2.793a.5.5 0 0 1-.5-.5c0-1.613-1.274-2.922-2.875-2.922a.5.5 0 0 1-.5.5c-1.613 0-2.875 1.309-2.875 2.922a.5.5 0 0 1-.5.5c-1.476 0-2.75 1.274-2.75 2.793 0 .156.013.31.04.46a.5.5 0 0 1-.48.54A3.5 3.5 0 0 1 0 7.773c0-1.636 1.242-2.969 2.834-3.194a5.53 5.53 0 0 1 1.572-3.237z" />
+                                <path fill-rule="evenodd"
+                                    d="M7.646 10.854a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 9.293V5.5a.5.5 0 0 0-1 0v3.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 2z" />
+                            </svg>
+                        </div>
+                        <p class="text-secondary mb-2">Drag & Drop CSV file here</p>
+                        <input type="file" name="upload_csv" class="form-control" accept=".csv" required>
+                    </div>
+                    <button type="submit" id="uploadBtn" class="btn btn-success w-100 fw-bold">
+                        Upload & Import
+                    </button>
+                    <div class="mt-2 text-center">
+                        <small class="text-secondary">Required: enrollment_no, name, roll_no, batch</small>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Faculty Card -->
+    <div class="col-md-6">
+        <div class="glass-card h-100">
+            <div class="card-body p-4">
+                <h5 class="card-title text-white fw-bold mb-4">Add New Faculty</h5>
+                <form method="POST">
+                    <input type="hidden" name="create_faculty" value="1">
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small text-uppercase">Full Name</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-secondary small text-uppercase">Email Address</label>
+                        <input type="email" name="email" class="form-control" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-secondary small text-uppercase">Subject</label>
+                            <input type="text" name="subject" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label text-secondary small text-uppercase">Password</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 fw-bold">Create Account</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Faculty List -->
+<div class="glass-card mt-5 p-4 animate-fade-in">
+    <h5 class="card-title text-white fw-bold mb-4">Faculty Members</h5>
+    <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle" style="background: transparent;">
+            <thead>
+                <tr>
+                    <th class="text-secondary small text-uppercase">Name</th>
+                    <th class="text-secondary small text-uppercase">Email</th>
+                    <th class="text-secondary small text-uppercase">Subject</th>
+                    <th class="text-secondary small text-uppercase text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for faculty in faculties %}
+                <tr>
+                    <td class="fw-bold">{{ faculty.name }}</td>
+                    <td>{{ faculty.email }}</td>
+                    <td><span class="badge bg-primary bg-opacity-25 text-primary px-3 py-2 rounded-pill">{{
+                            faculty.subject }}</span></td>
+                    <td class="text-end">
+                        <button class="btn btn-sm btn-outline-warning me-2" data-bs-toggle="modal"
+                            data-bs-target="#editModal{{ faculty.id }}">Edit</button>
+                        <form action="{{ url_for('delete_faculty', id=faculty.id) }}" method="POST" class="d-inline"
+                            onsubmit="return confirm('Are you sure?');">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+
+                <!-- Edit Modal -->
+                <div class="modal fade" id="editModal{{ faculty.id }}" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content glass-card border-0">
+                            <div class="modal-header border-bottom border-secondary border-opacity-25">
+                                <h5 class="modal-title text-white">Edit Faculty</h5>
+                                <button type="button" class="btn-close btn-close-white"
+                                    data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{{ url_for('edit_faculty', id=faculty.id) }}" method="POST">
+                                    <div class="mb-3">
+                                        <label class="text-secondary small">Name</label>
+                                        <input type="text" name="name" value="{{ faculty.name }}" class="form-control"
+                                            required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="text-secondary small">Email</label>
+                                        <input type="email" name="email" value="{{ faculty.email }}"
+                                            class="form-control" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="text-secondary small">Subject</label>
+                                        <input type="text" name="subject" value="{{ faculty.subject }}"
+                                            class="form-control" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="text-secondary small">New Password (Optional)</label>
+                                        <input type="password" name="password" class="form-control">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary w-100">Update Faculty</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

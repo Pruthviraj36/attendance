@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projector View</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: #000;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .text-glow {
+            text-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .card-active {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+        }
+
+        .card-absent {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+        }
+    </style>
+</head>
+
+<body class="text-white h-screen overflow-hidden flex flex-col" x-data="attendanceApp()">
+
+    <!-- Header -->
+    <div class="glass-panel p-4 flex justify-between items-center z-10 relative">
+        <div class="flex items-center space-x-6">
+            <h1 class="text-4xl font-black text-blue-500 tracking-tighter">ATTENDANCE</h1>
+            <div class="h-8 w-px bg-gray-700"></div>
+
+            <!-- Subject -->
+            <div class="flex flex-col">
+                <label class="text-xs text-gray-500 uppercase tracking-wider">Subject</label>
+                <select
+                    class="bg-gray-900 border border-gray-700 text-white p-2 rounded-lg text-lg focus:border-blue-500 outline-none w-48">
+                    <option value="{{ user.subject }}">{{ user.subject }}</option>
+                </select>
+            </div>
+
+            <!-- Slot -->
+            <div class="flex flex-col">
+                <label class="text-xs text-gray-500 uppercase tracking-wider">Slot</label>
+                <select
+                    class="bg-gray-900 border border-gray-700 text-white p-2 rounded-lg text-lg focus:border-blue-500 outline-none w-40"
+                    x-model="selectedSlot">
+                    {% for slot in slots %}
+                    <option value="{{ slot.name }}">{{ slot.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Roll Range Filter -->
+            <div class="flex items-end space-x-2">
+                <div class="flex flex-col">
+                    <label class="text-xs text-gray-500 uppercase tracking-wider">Start Roll</label>
+                    <input type="number" name="start_roll"
+                        class="bg-gray-900 border border-gray-700 text-white p-2 rounded-lg text-lg focus:border-blue-500 outline-none w-24"
+                        placeholder="101">
+                </div>
+                <div class="flex flex-col">
+                    <label class="text-xs text-gray-500 uppercase tracking-wider">End Roll</label>
+                    <input type="number" name="end_roll"
+                        class="bg-gray-900 border border-gray-700 text-white p-2 rounded-lg text-lg focus:border-blue-500 outline-none w-24"
+                        placeholder="150">
+                </div>
+                <button
+                    class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg text-lg transition"
+                    hx-get="/api/students" hx-target="#student-grid" hx-include="[name='start_roll'], [name='end_roll']"
+                    hx-indicator="#loading-indicator">
+                    LOAD
+                </button>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-8">
+            <div class="text-center">
+                <div class="text-sm text-gray-400 uppercase tracking-widest">Present</div>
+                <div class="text-4xl font-black text-green-400" x-text="presentCount">0</div>
+            </div>
+            <div class="text-center">
+                <div class="text-sm text-gray-400 uppercase tracking-widest">Absent</div>
+                <div class="text-4xl font-black text-red-400" x-text="absentCount">0</div>
+            </div>
+
+            <button @click="saveAttendance"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl text-xl transition transform hover:scale-105 shadow-lg shadow-blue-500/30 flex items-center">
+                <span x-show="!isLoading">SAVE ATTENDANCE</span>
+                <span x-show="isLoading" class="flex items-center">
+                    <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                        fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                        </path>
+                    </svg>
+                    SAVING...
+                </span>
+            </button>
+
+            <a href="{{ url_for('logout') }}"
+                class="text-gray-400 hover:text-white transition p-2 flex items-center space-x-2" title="Logout">
+                <span class="text-lg font-bold">LOGOUT</span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                </svg>
+            </a>
+        </div>
+    </div>
+
+    <!-- Grid -->
+    <div class="flex-1 overflow-y-auto p-6 relative">
+        <!-- Loading Indicator -->
+        <div id="loading-indicator"
+            class="htmx-indicator absolute inset-0 flex justify-center items-center bg-black/50 z-20">
+            <div class="text-2xl text-blue-400 font-bold animate-pulse">Loading Students...</div>
+        </div>
+
+        <div id="student-grid"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
+            <div class="col-span-full flex justify-center items-center h-64 text-gray-500">
+                <div class="text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 opacity-50" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                    <p class="text-xl">Enter Roll Range to Load Students</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function attendanceApp() {
+            return {
+                selectedSlot: '{{ slots[0].name if slots else "" }}',
+                students: {},
+                isLoading: false,
+
+                get presentCount() { return Object.values(this.students).filter(s => s === 'P').length; },
+                get absentCount() { return Object.values(this.students).filter(s => s === 'A').length; },
+
+                toggleAttendance(enrollment) {
+                    this.students[enrollment] = this.students[enrollment] === 'P' ? 'A' : 'P';
+                },
+
+                initStudent(enrollment) {
+                    if (!this.students[enrollment]) this.students[enrollment] = 'P';
+                },
+
+                async saveAttendance() {
+                    this.isLoading = true;
+                    try {
+                        const res = await fetch('/save_attendance', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                slot_name: this.selectedSlot,
+                                students: Object.entries(this.students).map(([k, v]) => ({ enrollment_no: k, status: v }))
+                            })
+                        });
+                        const data = await res.json();
+                        if (data.success) alert('Attendance Saved & Uploading!');
+                    } catch (e) {
+                        alert('Error saving attendance');
+                    } finally {
+                        this.isLoading = false;
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+
+</html>
