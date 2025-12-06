@@ -3,13 +3,18 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_migrate import Migrate
 from celery import Celery
+from dotenv import load_dotenv
+import os
 
 db = SQLAlchemy()
 login_manager = LoginManager()
 mail = Mail()
 migrate = Migrate()
+load_dotenv()
 
 def make_celery(app_name=__name__):
-    return Celery(app_name, backend='redis://localhost:6379/0', broker='redis://localhost:6379/0')
+    celery = Celery(app_name)
+    celery.conf.broker_url = os.getenv('CELERY_BROKER_URL')
+    return celery
 
 celery = make_celery()

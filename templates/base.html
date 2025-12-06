@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' cdn.jsdelivr.net unpkg.com cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' cdn.jsdelivr.net; img-src 'self' data: *;">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
     <title>Attendance System</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,21 +19,21 @@
     <!-- Custom CSS -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 
-    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    <script defer src="https://unpkg.com/htmx.org@1.9.10"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     {% block head %}{% endblock %}
 </head>
 
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top" role="navigation" aria-label="Main navigation">
         <div class="container">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="#" aria-label="Attendance System">
                 <span class="text-white">Attendance</span><span class="text-primary">Sys</span>
             </a>
             <div class="d-flex align-items-center">
                 {% if current_user.is_authenticated %}
                 <span class="text-secondary me-3 d-none d-md-block">Welcome, {{ current_user.name }}</span>
-                <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm rounded-pill px-4">Logout</a>
+                <a href="{{ url_for('logout') }}" class="btn btn-outline-light btn-sm rounded-pill px-4" aria-label="Logout">Logout</a>
                 {% endif %}
             </div>
         </div>

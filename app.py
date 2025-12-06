@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_file
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_file, session
 from config import Config
 from extensions import db, login_manager, mail, celery, migrate
 from models import Faculty, Student, Slot, Attendance
@@ -13,6 +13,13 @@ from flask_talisman import Talisman
 from datetime import datetime
 from celery_tasks import upload_csv_task, send_bulk_emails_task
 from sqlalchemy import cast, Integer
+import re
+
+def sanitize_enrollment_no(value):
+    value = str(value).strip()
+    if not re.match(r'^[A-Za-z0-9\-_\s]+$', value):
+        raise ValueError("Invalid enrollment number")
+    return value
 
 def create_app():
     app = Flask(__name__)
@@ -57,7 +64,9 @@ def create_app():
     @app.errorhandler(500)
     def internal_error(error):
         db.session.rollback()
-        return render_template('500.html'), 500
+        logged = not app.debug
+        flash('An internal server error occurred. Please try again later.')
+        return render_template('500.html', logged=logged), 500
 
     @login_manager.user_loader
     def load_user(user_id):
@@ -74,13 +83,21 @@ def create_app():
             email = request.form.get('email')
             password = request.form.get('password')
             user = Faculty.query.filter_by(email=email).first()
-            
+
+            failed_attempts = session.get('failed_attempts', 0)
+            if failed_attempts >= 3:
+                flash('Too many failed login attempts. Please wait 5 minutes before trying again.')
+                return render_template('login.html')
+
             if user and check_password_hash(user.password_hash, password):
+                session.pop('failed_attempts', None)  # Reset on success
                 login_user(user)
                 if user.email == 'admin@univ.edu':
                     return redirect(url_for('admin_dashboard'))
                 return redirect(url_for('faculty_dashboard'))
-            flash('Invalid email or password')
+            else:
+                session['failed_attempts'] = failed_attempts + 1
+                flash('Invalid email or password')
             
         return render_template('login.html')
 
@@ -137,10 +154,11 @@ def create_app():
                             
                             for _, row in df.iterrows():
                                 extra_data = {col: row[col] for col in extra_cols}
-                                student = Student.query.get(str(row['enrollment_no']))
+                                enrollment_no = sanitize_enrollment_no(row['enrollment_no'])
+                                student = Student.query.get(enrollment_no)
                                 if not student:
-                                    student = Student(enrollment_no=str(row['enrollment_no']))
-                                
+                                    student = Student(enrollment_no=enrollment_no)
+
                                 student.name = row['name']
                                 student.roll_no = str(row['roll_no'])
                                 student.email = row.get('email')
@@ -198,19 +216,26 @@ def create_app():
         # Fetch unique batches
         batches = db.session.query(Student.batch).distinct().order_by(Student.batch).all()
         batches = [b[0] for b in batches if b[0]] # Flatten and remove None
-        
-        return render_template('faculty.html', slots=slots, batches=batches, user=current_user)
+        # Fetch unique semesters
+        semesters = db.session.query(Student.semester).distinct().order_by(Student.semester).all()
+        semesters = [s[0] for s in semesters if s[0]] # Flatten and remove None
+
+        return render_template('faculty.html', slots=slots, batches=batches, semesters=semesters, user=current_user)
 
     @app.route('/api/students')
     @login_required
     def get_students():
+        app.logger.info('API /api/students called with params: %s', dict(request.args))
+
         # Search functionality
         query = request.args.get('q', '')
         start_roll = request.args.get('start_roll', '')
         end_roll = request.args.get('end_roll', '')
-        
+        batch = request.args.get('batch', '')
+        semester = request.args.get('semester', '')
+
         student_query = Student.query
-        
+
         if start_roll and end_roll:
             try:
                 start = int(start_roll)
@@ -220,23 +245,36 @@ def create_app():
                     cast(Student.roll_no, Integer) >= start,
                     cast(Student.roll_no, Integer) <= end
                 )
+                app.logger.info('Filtering by roll range: %s to %s', start, end)
             except ValueError:
+                app.logger.warning('Invalid roll range: start=%s, end=%s', start_roll, end_roll)
                 pass # Handle non-integer inputs gracefully
-            
+
+        if batch:
+            student_query = student_query.filter(Student.batch == batch)
+            app.logger.info('Filtering by batch: %s', batch)
+
+        if semester:
+            student_query = student_query.filter(Student.semester == semester)
+            app.logger.info('Filtering by semester: %s', semester)
+
         if query:
             student_query = student_query.filter(
-                (Student.enrollment_no.ilike(f'%{query}%')) | 
+                (Student.enrollment_no.ilike(f'%{query}%')) |
                 (Student.roll_no.ilike(f'%{query}%')) |
                 (Student.name.ilike(f'%{query}%'))
             )
-            
-        # If no range and no query, return empty
-        if not (start_roll and end_roll) and not query:
-            students = []
-        else:
-            students = student_query.order_by(cast(Student.roll_no, Integer)).all()
-            
-        return render_template('partials/student_grid.html', students=students)
+            app.logger.info('Filtering by query: %s', query)
+
+        # Default loading: if no filters, load all students
+        students = student_query.order_by(cast(Student.roll_no, Integer)).all()
+
+        app.logger.info('Found %d students', len(students))
+
+        # Error handling for empty results
+        no_results = len(students) == 0
+
+        return render_template('partials/student_grid.html', students=students, no_results=no_results)
 
     @app.route('/api/attendance', methods=['POST'])
     @login_required

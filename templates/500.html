@@ -4,7 +4,9 @@
 <div class="text-center mt-5">
     <h1 class="display-1">500</h1>
     <p class="lead">Internal Server Error</p>
+    {% if logged %}
     <p>Something went wrong. The administrator has been notified.</p>
+    {% endif %}
     <a href="{{ url_for('login') }}" class="btn btn-primary">Go Home</a>
 </div>
 {% endblock %}

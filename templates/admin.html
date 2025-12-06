@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block head %}
+<script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+{% endblock %}
+
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-5 animate-fade-in">
     <div>
@@ -14,8 +18,7 @@
         <div class="glass-card h-100">
             <div class="card-body p-4">
                 <h5 class="card-title text-white fw-bold mb-4">Import Students</h5>
-                <form method="POST" enctype="multipart/form-data"
-                    onsubmit="document.getElementById('uploadBtn').innerHTML = 'Uploading...'; document.getElementById('uploadBtn').disabled = true;">
+                <form method="POST" enctype="multipart/form-data">
                     <div class="upload-zone p-5 text-center mb-3"
                         style="border: 2px dashed rgba(255,255,255,0.2); border-radius: 12px; transition: all 0.3s;">
                         <div class="mb-3">
@@ -54,7 +57,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label text-secondary small text-uppercase">Email Address</label>
-                        <input type="email" name="email" class="form-control" required>
+                        <input type="email" name="email" class="form-control" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required>
                     </div>
                     <div class="row">
                         <div class="col-md-6 mb-3">
@@ -96,49 +99,13 @@
                     <td class="text-end">
                         <button class="btn btn-sm btn-outline-warning me-2" data-bs-toggle="modal"
                             data-bs-target="#editModal{{ faculty.id }}">Edit</button>
-                        <form action="{{ url_for('delete_faculty', id=faculty.id) }}" method="POST" class="d-inline"
-                            onsubmit="return confirm('Are you sure?');">
+                        <form action="{{ url_for('delete_faculty', id=faculty.id) }}" method="POST" class="d-inline">
                             <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
                         </form>
                     </td>
                 </tr>
 
-                <!-- Edit Modal -->
-                <div class="modal fade" id="editModal{{ faculty.id }}" tabindex="-1">
-                    <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content glass-card border-0">
-                            <div class="modal-header border-bottom border-secondary border-opacity-25">
-                                <h5 class="modal-title text-white">Edit Faculty</h5>
-                                <button type="button" class="btn-close btn-close-white"
-                                    data-bs-dismiss="modal"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="{{ url_for('edit_faculty', id=faculty.id) }}" method="POST">
-                                    <div class="mb-3">
-                                        <label class="text-secondary small">Name</label>
-                                        <input type="text" name="name" value="{{ faculty.name }}" class="form-control"
-                                            required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="text-secondary small">Email</label>
-                                        <input type="email" name="email" value="{{ faculty.email }}"
-                                            class="form-control" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="text-secondary small">Subject</label>
-                                        <input type="text" name="subject" value="{{ faculty.subject }}"
-                                            class="form-control" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="text-secondary small">New Password (Optional)</label>
-                                        <input type="password" name="password" class="form-control">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary w-100">Update Faculty</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% include 'partials/edit_faculty_modal.html' %}
                 {% endfor %}
             </tbody>
         </table>

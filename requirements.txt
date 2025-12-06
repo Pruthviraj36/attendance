@@ -1,16 +1,28 @@
+# Web Framework
 flask
 flask-sqlalchemy
 flask-login
 flask-mail
 flask-migrate
 flask-talisman
+
+# Database
 psycopg2-binary
+
+# Data Processing
 pandas
+
+# Task Queue
 celery
 redis
+
+# Google API
 google-api-python-client
 google-auth-httplib2
-google-auth-oauthlib
+
+# Configuration
 python-dotenv
+
+# Deployment
 gunicorn
 waitress

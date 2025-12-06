@@ -2,10 +2,13 @@ from googleapiclient.discovery import build
 from google.oauth2 import service_account
 from googleapiclient.http import MediaFileUpload
 import os
+import logging
 from datetime import datetime
 
 SCOPES = ['https://www.googleapis.com/auth/drive.file']
 SERVICE_ACCOUNT_FILE = 'service_account.json'
+
+logger = logging.getLogger(__name__)
 
 def authenticate_drive():
     creds = None
@@ -36,9 +39,17 @@ def get_or_create_folder(service, folder_name, parent_id=None):
         return folder.get('id')
 
 def upload_file_to_drive(file_path, root_folder_id=None):
+    # Input validation
+    if not isinstance(file_path, str) or not file_path.strip():
+        raise ValueError("file_path must be a non-empty string")
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"File not found: {file_path}")
+    if root_folder_id is not None and (not isinstance(root_folder_id, str) or not root_folder_id.strip()):
+        raise ValueError("root_folder_id must be a non-empty string if provided")
+
     creds = authenticate_drive()
     if not creds:
-        print("No credentials found.")
+        logger.warning("No credentials found.")
         return None
 
     service = build('drive', 'v3', credentials=creds)
@@ -65,8 +76,8 @@ def upload_file_to_drive(file_path, root_folder_id=None):
     
     try:
         file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
-        print(f"File ID: {file.get('id')}")
+        logger.info(f"File ID: {file.get('id')}")
         return file.get('id')
     except Exception as e:
-        print(f"An error occurred: {e}")
+        logger.error(f"An error occurred: {e}")
         return None

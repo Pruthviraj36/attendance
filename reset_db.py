@@ -4,17 +4,9 @@ from models import Faculty, Slot
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 
-app = create_app()
-
-with app.app_context():
-    print("Dropping all tables...")
-    db.drop_all()
-    print("Creating all tables...")
-    db.create_all()
-    
-    # Re-create Triggers
-    print("Creating triggers...")
-    db.session.execute(db.text("""
+def create_triggers(db_session):
+    """Create database triggers for updating last attendance."""
+    db_session.execute(db.text("""
         CREATE OR REPLACE FUNCTION update_last_attendance()
         RETURNS TRIGGER AS $$
         BEGIN
@@ -26,7 +18,7 @@ with app.app_context():
         $$ LANGUAGE plpgsql;
     """))
     
-    db.session.execute(db.text("""
+    db_session.execute(db.text("""
         DROP TRIGGER IF EXISTS trigger_update_last_attendance ON attendance;
         CREATE TRIGGER trigger_update_last_attendance
         AFTER INSERT ON attendance
@@ -34,11 +26,27 @@ with app.app_context():
         EXECUTE FUNCTION update_last_attendance();
     """))
 
-    # Create Admin
-    print("Creating Admin user...")
+def create_admin(db_session):
+    """Create the default admin user."""
     admin = Faculty(name='Admin', email='admin@univ.edu', subject='Administration', 
                     password_hash=generate_password_hash('admin123'))
-    db.session.add(admin)
+    db_session.add(admin)
+
+app = create_app()
+
+with app.app_context():
+    print("Dropping all tables...")
+    db.drop_all()
+    print("Creating all tables...")
+    db.create_all()
+    
+    # Re-create Triggers
+    print("Creating triggers...")
+    create_triggers(db.session)
+
+    # Create Admin
+    print("Creating Admin user...")
+    create_admin(db.session)
     
     # Create Default Slots
     print("Creating default slots...")

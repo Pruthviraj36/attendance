@@ -2,6 +2,8 @@ from extensions import db
 from flask_login import UserMixin
 from sqlalchemy.dialects.postgresql import JSONB
 from datetime import datetime
+from sqlalchemy.orm import validates
+import re
 
 class Faculty(UserMixin, db.Model):
     __tablename__ = 'faculty'
@@ -10,6 +12,12 @@ class Faculty(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     subject = db.Column(db.String(100), nullable=False)
     password_hash = db.Column(db.String(256))
+
+    @validates('email')
+    def validate_email(self, key, value):
+        if value and not re.match(r"[^@]+@[^@]+\.[^@]+", value):
+            raise ValueError("Invalid email format")
+        return value
 
     def get_id(self):
         return str(self.id)
@@ -21,6 +29,19 @@ class Student(db.Model):
     name = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(120))
     batch = db.Column(db.String(50))
+
+    @validates('email')
+    def validate_email(self, key, value):
+        if value and not re.match(r"[^@]+@[^@]+\.[^@]+", value):
+            raise ValueError("Invalid email format")
+        return value
+
+    @validates('roll_no')
+    def validate_roll_no(self, key, value):
+        if value and not re.match(r'^\d+$', str(value)):
+            raise ValueError("Roll number must be numeric")
+        return value
+
     semester = db.Column(db.String(10))
 
 class Slot(db.Model):

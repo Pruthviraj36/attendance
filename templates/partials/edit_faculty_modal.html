@@ -1,0 +1,36 @@
+<!-- Edit Modal -->
+<div class="modal fade" id="editModal{{ faculty.id }}" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content glass-card border-0">
+            <div class="modal-header border-bottom border-secondary border-opacity-25">
+                <h5 class="modal-title text-white">Edit Faculty</h5>
+                <button type="button" class="btn-close btn-close-white"
+                    data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form action="{{ url_for('edit_faculty', id=faculty.id) }}" method="POST">
+                    <div class="mb-3">
+                        <label class="text-secondary small">Name</label>
+                        <input type="text" name="name" value="{{ faculty.name }}" class="form-control"
+                            required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-secondary small">Email</label>
+                        <input type="email" name="email" value="{{ faculty.email }}"
+                            class="form-control" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-secondary small">Subject</label>
+                        <input type="text" name="subject" value="{{ faculty.subject }}"
+                            class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-secondary small">New Password (Optional)</label>
+                        <input type="password" name="password" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Update Faculty</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

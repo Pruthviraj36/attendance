@@ -1,6 +1,9 @@
 from flask_mail import Message
 from extensions import mail
 from flask import current_app
+import logging
+
+logger = logging.getLogger(__name__)
 
 def send_absent_email(student_email, student_name, enrollment_no, subject, faculty_name, slot, date):
     msg = Message(f"Absent Alert: {subject}",
@@ -23,5 +26,5 @@ def send_absent_email(student_email, student_name, enrollment_no, subject, facul
         mail.send(msg)
         return True
     except Exception as e:
-        print(f"Failed to send email to {student_email}: {e}")
+        logger.error(f"Failed to send email to {student_email}: {e}")
         return False

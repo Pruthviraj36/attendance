@@ -1,16 +1,32 @@
-{% for student in students %}
-<div class="bg-gray-800 border border-gray-600 rounded-lg p-4 flex flex-col items-center justify-center cursor-pointer transition transform hover:scale-105"
-    :class="students['{{ student.enrollment_no }}'] === 'A' ? 'bg-red-900 border-red-500' : 'bg-gray-800'"
-    @click="toggleAttendance('{{ student.enrollment_no }}')" x-init="initStudent('{{ student.enrollment_no }}')">
-
-    <div class="text-[120px] font-black text-white mb-2 tracking-tighter leading-none">{{ student.enrollment_no[-3:] }}
-    </div>
-    <div class="text-xl text-gray-400 mb-1">{{ student.roll_no }}</div>
-    <div class="text-lg font-bold text-blue-300 truncate w-full text-center">{{ student.name }}</div>
-
-    <div class="mt-2 font-bold"
-        :class="students['{{ student.enrollment_no }}'] === 'A' ? 'text-red-500' : 'text-green-500'"
-        x-text="students['{{ student.enrollment_no }}'] === 'A' ? 'ABSENT' : 'PRESENT'">
-    </div>
+{% if students %}
+<table class="min-w-full divide-y divide-gray-200">
+    <thead class="bg-gray-50">
+        <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Enrollment</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Roll No</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+        </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+        {% for student in students %}
+        <tr class="hover:bg-gray-50 cursor-pointer" tabindex="0" @click="toggleAttendance('{{ student.enrollment_no }}')" @keydown.space.prevent="toggleAttendance('{{ student.enrollment_no }}')" @keydown.enter.prevent="toggleAttendance('{{ student.enrollment_no }}')" x-init="initStudent('{{ student.enrollment_no }}')" data-enrollment="{{ student.enrollment_no }}" data-roll="{{ student.roll_no }}" data-name="{{ student.name }}">
+            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ student.enrollment_no }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ student.roll_no }}</td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ student.name }}</td>
+            <td class="px-6 py-4 whitespace-nowrap">
+                <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wide transition-colors" :class="students['{{ student.enrollment_no }}'] === 'A' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'" x-text="students['{{ student.enrollment_no }}'] === 'A' ? 'ABSENT' : 'PRESENT'">
+                </span>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="p-8 text-center text-gray-600">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 opacity-50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z" />
+    </svg>
+    <p class="text-xl">No students found matching the filters.</p>
 </div>
-{% endfor %}
+{% endif %}
