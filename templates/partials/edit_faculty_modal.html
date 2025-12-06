@@ -1,36 +1,51 @@
 <!-- Edit Modal -->
-<div class="modal fade" id="editModal{{ faculty.id }}" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content glass-card border-0">
-            <div class="modal-header border-bottom border-secondary border-opacity-25">
-                <h5 class="modal-title text-white">Edit Faculty</h5>
-                <button type="button" class="btn-close btn-close-white"
-                    data-bs-dismiss="modal"></button>
+<div x-show="activeModal === {{ faculty.id }}" x-transition:enter="transition ease-out duration-300"
+    x-transition:enter-start="opacity-0 scale-90" x-transition:enter-end="opacity-100 scale-100"
+    x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 scale-100"
+    x-transition:leave-end="opacity-0 scale-90" class="fixed inset-0 z-50 overflow-y-auto" style="display: none;"
+    aria-labelledby="modal-title-{{ faculty.id }}" role="dialog" aria-modal="true"
+    @keydown.escape.window="activeModal = null">
+
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-black/70 backdrop-blur-sm transition-opacity" @click="activeModal = null"></div>
+
+    <div class="flex min-h-full items-center justify-center p-4">
+        <div
+            class="relative w-full max-w-lg transform overflow-hidden rounded-2xl glass-card p-6 text-left shadow-xl transition-all border border-white/20">
+            <div class="flex items-center justify-between mb-6 border-b border-white/10 pb-4">
+                <h3 class="text-lg font-bold text-white" id="modal-title-{{ faculty.id }}">Edit Faculty</h3>
+                <button @click="activeModal = null" class="text-white/50 hover:text-white transition-colors">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
             </div>
-            <div class="modal-body">
-                <form action="{{ url_for('edit_faculty', id=faculty.id) }}" method="POST">
-                    <div class="mb-3">
-                        <label class="text-secondary small">Name</label>
-                        <input type="text" name="name" value="{{ faculty.name }}" class="form-control"
-                            required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="text-secondary small">Email</label>
-                        <input type="email" name="email" value="{{ faculty.email }}"
-                            class="form-control" pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="text-secondary small">Subject</label>
-                        <input type="text" name="subject" value="{{ faculty.subject }}"
-                            class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label class="text-secondary small">New Password (Optional)</label>
-                        <input type="password" name="password" class="form-control">
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Update Faculty</button>
-                </form>
-            </div>
+
+            <form action="{{ url_for('edit_faculty', id=faculty.id) }}" method="POST" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">Name</label>
+                    <input type="text" name="name" value="{{ faculty.name }}" class="form-input-glass" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">Email</label>
+                    <input type="email" name="email" value="{{ faculty.email }}" class="form-input-glass"
+                        pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">Subject</label>
+                    <input type="text" name="subject" value="{{ faculty.subject }}" class="form-input-glass" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">New Password
+                        (Optional)</label>
+                    <input type="password" name="password" class="form-input-glass"
+                        placeholder="Leave blank to keep current">
+                </div>
+                <div class="pt-4">
+                    <button type="submit" class="w-full btn-primary-glass">Update Faculty</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

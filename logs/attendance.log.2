@@ -1,0 +1,98 @@
+2025-12-06 10:21:37,279 ERROR: Exception on /save_attendance [POST] [in C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask\app.py:875]
+Traceback (most recent call last):
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\local.py", line 292, in _get_current_object
+    return object.__getattribute__(self, '__thing')
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+AttributeError: 'PromiseProxy' object has no attribute '__thing'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask\app.py", line 1511, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask\app.py", line 919, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask\app.py", line 917, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask\app.py", line 902, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask_login\utils.py", line 290, in decorated_view
+    return current_app.ensure_sync(func)(*args, **kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "E:\SEM-6\Personal\attendance\app.py", line 349, in save_attendance_session
+    upload_csv_task.delay(filepath, folder_id)
+    ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\local.py", line 143, in __getattr__
+    return getattr(self._get_current_object(), name)
+                   ~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\local.py", line 294, in _get_current_object
+    return self.__evaluate__()
+           ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\local.py", line 324, in __evaluate__
+    thing = Proxy._get_current_object(self)
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\local.py", line 105, in _get_current_object
+    return loc(*self.__args, **self.__kwargs)
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\app\base.py", line 603, in _task_from_fun
+    task.bind(self)  # connects task to this app
+    ~~~~~~~~~^^^^^^
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\app\task.py", line 355, in bind
+    setattr(cls, attr_name, conf[config_name])
+                            ~~~~^^^^^^^^^^^^^
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\utils\collections.py", line 391, in __getitem__
+    return getitem(k)
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\utils\collections.py", line 249, in __getitem__
+    return mapping[_key]
+           ~~~~~~~^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\collections\__init__.py", line 1135, in __getitem__
+    if key in self.data:
+              ^^^^^^^^^
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\kombu\utils\objects.py", line 40, in __get__
+    return super().__get__(instance, owner)
+           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\functools.py", line 1026, in __get__
+    val = self.func(instance)
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\app\base.py", line 227, in data
+    return self.callback()
+           ~~~~~~~~~~~~~^^
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\app\base.py", line 1130, in _finalize_pending_conf
+    conf = self._conf = self._load_config()
+                        ~~~~~~~~~~~~~~~~~^^
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\app\base.py", line 1148, in _load_config
+    settings = detect_settings(
+        self.prepare_config(self.loader.conf), self._preconf,
+        ignore_keys=self._preconf_set_by_auto, prefix=self.namespace,
+    )
+  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\app\utils.py", line 274, in detect_settings
+    raise ImproperlyConfigured(info.mix_error.format(renames='\n'.join(
+    ...<2 lines>...
+    )))
+celery.exceptions.ImproperlyConfigured: 
+
+Cannot mix new and old setting keys, please rename the
+following settings to the new format:
+
+CELERY_RESULT_BACKEND                -> result_backend
+
+
+2025-12-06 10:29:54,409 INFO: Attendance System startup [in E:\SEM-6\Personal\attendance\app.py:53]
+2025-12-06 10:30:10,086 INFO: API /api/students called with params: {'batch': '', 'start_roll': '640', 'end_roll': '644'} [in E:\SEM-6\Personal\attendance\app.py:228]
+2025-12-06 10:30:10,089 INFO: Filtering by roll range: 640 to 644 [in E:\SEM-6\Personal\attendance\app.py:248]
+2025-12-06 10:30:10,103 INFO: Found 5 students [in E:\SEM-6\Personal\attendance\app.py:272]
+2025-12-06 10:32:12,193 INFO: API /api/students called with params: {'batch': 'C3', 'start_roll': '', 'end_roll': ''} [in E:\SEM-6\Personal\attendance\app.py:228]
+2025-12-06 10:32:12,199 INFO: Filtering by batch: C3 [in E:\SEM-6\Personal\attendance\app.py:255]
+2025-12-06 10:32:12,215 INFO: Found 20 students [in E:\SEM-6\Personal\attendance\app.py:272]
+2025-12-06 10:47:17,368 INFO: Attendance System startup [in E:\SEM-6\Personal\attendance\app.py:53]
+2025-12-06 10:47:25,709 INFO: API /api/students called with params: {'batch': 'C3', 'start_roll': '', 'end_roll': ''} [in E:\SEM-6\Personal\attendance\app.py:228]
+2025-12-06 10:47:25,711 INFO: Filtering by batch: C3 [in E:\SEM-6\Personal\attendance\app.py:255]
+2025-12-06 10:47:25,719 INFO: Found 20 students [in E:\SEM-6\Personal\attendance\app.py:272]
+2025-12-06 10:47:43,219 INFO: save_attendance payload: {'slot_name': '7:45-9:35', 'students': [{'enrollment_no': '23010101006', 'status': 'P'}, {'enrollment_no': '23010101007', 'status': 'P'}, {'enrollment_no': '23010101008', 'status': 'P'}, {'enrollment_no': '23010101009', 'status': 'P'}, {'enrollment_no': '23010101010', 'status': 'P'}, {'enrollment_no': '23010101014', 'status': 'P'}, {'enrollment_no': '23010101016', 'status': 'P'}, {'enrollment_no': '23010101017', 'status': 'P'}, {'enrollment_no': '23010101019', 'status': 'P'}, {'enrollment_no': '23010101023', 'status': 'P'}, {'enrollment_no': '23010101024', 'status': 'P'}, {'enrollment_no': '23010101030', 'status': 'P'}, {'enrollment_no': '23010101045', 'status': 'P'}, {'enrollment_no': '23010101046', 'status': 'A'}, {'enrollment_no': '23010101048', 'status': 'P'}, {'enrollment_no': '23010101051', 'status': 'P'}, {'enrollment_no': '23010101052', 'status': 'P'}, {'enrollment_no': '23010101054', 'status': 'P'}, {'enrollment_no': '23010101058', 'status': 'P'}, {'enrollment_no': '23010101067', 'status': 'P'}]} [in E:\SEM-6\Personal\attendance\app.py:301]
+2025-12-06 10:47:43,222 INFO: Resolved slot_name=7:45-9:35 to slot_id=1 [in E:\SEM-6\Personal\attendance\app.py:309]
+2025-12-06 10:47:43,222 INFO: Processing student enrollment_no=23010101006, status=P [in E:\SEM-6\Personal\attendance\app.py:318]
+2025-12-06 10:47:43,227 INFO: Found student: enrollment_no=23010101006, roll_no=630, name=Ajani Keval Kalpeshbhai [in E:\SEM-6\Personal\attendance\app.py:323]
+2025-12-06 10:47:43,228 INFO: Processing student enrollment_no=23010101007, status=P [in E:\SEM-6\Personal\attendance\app.py:318]
+2025-12-06 10:47:43,256 INFO: Found student: enrollment_no=23010101007, roll_no=631, name=Akbari Kishan Kamleshbhai [in E:\SEM-6\Personal\attendance\app.py:323]
+2025-12-06 10:47:43,259 INFO: Processing student enrollment_no=23010101008, status=P [in E:\SEM-6\Personal\attendance\app.py:318]
+2025-12-06 10:47:43,266 INFO: Found student: enrollment_no=23010101008, roll_no=632, name=Akbari Manali Alpeshbhai [in E:\SEM-6\Personal\attendance\app.py:323]
+2025-12-06 10:47:43,268 INFO: Processing student enrollment_no=23010101009, status=P [in E:\SEM-6\Personal\attendance\app.py:318]
+2025-12-06 10:47:43,271 INFO: Found student: enrollment_no=23010101009, roll_no=633, name=Andani Renish Maheshbhai [in E:\SEM-6\Personal\attendance\app.py:323]

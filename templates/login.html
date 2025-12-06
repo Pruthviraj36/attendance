@@ -1,26 +1,41 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="row justify-content-center align-items-center" style="min-height: 70vh;">
-    <div class="col-md-5 col-lg-4">
-        <div class="glass-card p-5 animate-fade-in">
-            <div class="text-center mb-4">
-                <h2 class="fw-bold text-white">Welcome Back</h2>
-                <p class="text-secondary">Sign in to continue</p>
+<div class="flex flex-col items-center justify-center min-h-[70vh]">
+    <div class="w-full max-w-md">
+        <div class="glass-card p-8 animate-fade-in">
+            <div class="text-center mb-8">
+                <h2 class="text-3xl font-bold text-white mb-2">Welcome Back</h2>
+                <p class="text-white/60">Sign in to continue</p>
             </div>
-            <form method="POST">
-                <div class="mb-4">
-                    <label class="form-label text-secondary small text-uppercase fw-bold">Email Address</label>
-                    <input type="email" name="email" class="form-control form-control-lg" placeholder="name@univ.edu"
+
+            <form method="POST" class="space-y-6">
+                <div>
+                    <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">Email
+                        Address</label>
+                    <input type="email" name="email" class="form-input-glass" placeholder="name@univ.edu"
                         pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" required>
                 </div>
-                <div class="mb-4">
-                    <label class="form-label text-secondary small text-uppercase fw-bold">Password</label>
-                    <input type="password" name="password" class="form-control form-control-lg" placeholder="••••••••"
-                        required>
+
+                <div>
+                    <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">Password</label>
+                    <input type="password" name="password" class="form-input-glass" placeholder="••••••••" required>
                 </div>
-                <button type="submit" class="btn btn-primary w-100 btn-lg fw-bold mt-2">Sign In</button>
+
+                <button type="submit"
+                    class="w-full btn-primary-glass mt-4 flex justify-center items-center gap-2 group">
+                    <span>Sign In</span>
+                    <svg class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </button>
             </form>
+        </div>
+
+        <div class="mt-8 text-center text-sm text-white/40">
+            &copy; {{ 2024 }} Attendance System. All rights reserved.
         </div>
     </div>
 </div>

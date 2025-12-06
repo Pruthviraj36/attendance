@@ -297,14 +297,30 @@ def create_app():
         students_data = data.get('students') # List of {enrollment_no, status}
         slot_name = data.get('slot_name')
         date_str = datetime.now().strftime('%Y-%m-%d')
+    
+        app.logger.info('save_attendance payload: %s', data)
+
+        # Get slot_id from slot_name
+        slot = Slot.query.filter_by(name=slot_name).first()
+        if not slot:
+            app.logger.error('Slot not found: %s', slot_name)
+            return jsonify({'success': False, 'message': f'Slot {slot_name} not found'})
+        slot_id = slot.id
+        app.logger.info('Resolved slot_name=%s to slot_id=%s', slot_name, slot_id)
         
         # Create DataFrame
         records = []
         absent_students = []
         
         for s in students_data:
-            student = Student.query.get(s['enrollment_no'])
+            enrollment_no = s['enrollment_no']
             status = s['status']
+            app.logger.info('Processing student enrollment_no=%s, status=%s', enrollment_no, status)
+            student = Student.query.get(enrollment_no)
+            if not student:
+                app.logger.error('Student not found for enrollment_no=%s', enrollment_no)
+                continue
+            app.logger.info('Found student: enrollment_no=%s, roll_no=%s, name=%s', student.enrollment_no, student.roll_no, student.name)
             records.append({
                 'enrollment_no': student.enrollment_no,
                 'roll_no': student.roll_no,
@@ -314,7 +330,7 @@ def create_app():
                 'slot': slot_name,
                 'subject': current_user.subject
             })
-            
+    
             if status == 'A' and student.email:
                 absent_students.append({
                     'email': student.email,
@@ -325,21 +341,22 @@ def create_app():
                     'slot': slot_name,
                     'date': date_str
                 })
-                
+    
             # Save to DB
             att = Attendance(
                 faculty_id=current_user.id,
                 enrollment_no=student.enrollment_no,
-                slot_id=1, # Placeholder, need real slot ID
+                slot_id=slot_id,
                 subject=current_user.subject,
                 status=status
             )
             db.session.add(att)
-            
+    
+        app.logger.info('Processed %d students, %d attendance records added', len(students_data), len(records))
         db.session.commit()
         
         # Generate CSV
-        filename = f"{current_user.name}_{date_str}_{slot_name}.csv"
+        filename = f"{current_user.name}_{date_str}_{slot_name.replace(':', '-')}.csv"
         filepath = os.path.join('tmp', filename)
         os.makedirs('tmp', exist_ok=True)
         pd.DataFrame(records).to_csv(filepath, index=False)
@@ -354,6 +371,14 @@ def create_app():
     with app.app_context():
         db.create_all()
         
+        # Ensure extra_fields column exists (Auto-migration)
+        try:
+            db.session.execute(db.text("ALTER TABLE students ADD COLUMN IF NOT EXISTS extra_fields JSONB;"))
+            db.session.commit()
+        except Exception as e:
+            app.logger.warning(f"Could not alter table: {e}")
+            db.session.rollback()
+
         # Create Trigger Function and Trigger
         db.session.execute(db.text("""
             CREATE OR REPLACE FUNCTION update_last_attendance()

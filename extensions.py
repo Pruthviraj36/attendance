@@ -14,7 +14,6 @@ load_dotenv()
 
 def make_celery(app_name=__name__):
     celery = Celery(app_name)
-    celery.conf.broker_url = os.getenv('CELERY_BROKER_URL')
     return celery
 
 celery = make_celery()

@@ -1,12 +1,14 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="text-center mt-5">
-    <h1 class="display-1">500</h1>
-    <p class="lead">Internal Server Error</p>
+<div class="flex flex-col items-center justify-center min-h-[60vh] text-center">
+    <h1 class="text-9xl font-bold text-red-500/80 animate-pulse">500</h1>
+    <p class="text-2xl text-white/80 mt-4 font-medium">Internal Server Error</p>
     {% if logged %}
-    <p>Something went wrong. The administrator has been notified.</p>
+    <p class="text-white/50 mt-2 max-w-md">Something went wrong. The administrator has been notified.</p>
     {% endif %}
-    <a href="{{ url_for('login') }}" class="btn btn-primary">Go Home</a>
+    <div class="mt-8">
+        <a href="{{ url_for('login') }}" class="btn-primary-glass">Go Home</a>
+    </div>
 </div>
 {% endblock %}

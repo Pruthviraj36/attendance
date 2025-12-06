@@ -43,6 +43,7 @@ class Student(db.Model):
         return value
 
     semester = db.Column(db.String(10))
+    extra_fields = db.Column(JSONB)
 
 class Slot(db.Model):
     __tablename__ = 'slots'

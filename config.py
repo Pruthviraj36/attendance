@@ -14,7 +14,7 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     
-    CELERY_BROKER_URL = os.environ.get('CELERY_BROKER_URL')
-    CELERY_RESULT_BACKEND = os.environ.get('CELERY_RESULT_BACKEND')
+    broker_url = os.environ.get('CELERY_BROKER_URL')
+    result_backend = os.environ.get('CELERY_RESULT_BACKEND')
     
     GOOGLE_DRIVE_FOLDER_ID = os.environ.get('GOOGLE_DRIVE_FOLDER_ID')
