@@ -114,6 +114,7 @@
 </head>
 
 <body class="bg-animated antialiased selection:bg-primary-500 selection:text-white">
+    {% block navbar %}
     <nav class="fixed top-0 left-0 right-0 z-50 bg-slate-900/80 backdrop-blur-lg border-b border-white/5">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
@@ -141,7 +142,9 @@
             </div>
         </div>
     </nav>
+    {% endblock %}
 
+    {% block main %}
     <div class="pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
         {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -164,6 +167,7 @@
 
         {% block content %}{% endblock %}
     </div>
+    {% endblock %}
 
 </body>
 

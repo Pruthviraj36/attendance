@@ -4,28 +4,36 @@
 <script src="{{ url_for('static', filename='js/attendance.js') }}?v=4"></script>
 {% endblock %}
 
+{% block navbar %}{% endblock %}
+{% block main %}
 {% block content %}
 <div x-data="attendanceApp('{{ slots[0].name if slots else " default" }}')" x-init="init()"
     class="min-h-screen flex flex-col relative overflow-hidden font-sans text-white bg-dark-main">
 
     <!-- Top Header -->
     <div
-        class="fixed top-0 left-0 right-0 z-40 p-6 flex justify-between items-center bg-gradient-to-b from-dark-main/90 to-transparent pointer-events-none">
+        class="fixed top-0 left-0 right-0 z-[150] p-6 flex justify-between items-center bg-gradient-to-b from-dark-main/90 to-transparent pointer-events-none">
         <div class="pointer-events-auto">
             <h2 class="text-2xl font-bold tracking-tight drop-shadow-md">Faculty<span
                     class="text-primary-400">Panel</span></h2>
             <p class="text-xs text-white/50 font-medium tracking-wide shadow-black">{{ user.subject }}</p>
         </div>
 
-        <button @click="showFilters = !showFilters"
-            class="pointer-events-auto btn-secondary-glass flex items-center gap-2 text-sm px-4 py-2 border border-white/10 shadow-lg backdrop-blur-md">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
-                </path>
-            </svg>
-            <span x-text="showFilters ? 'Hide Settings' : 'Settings'"></span>
-        </button>
+        <div class="flex items-center gap-3 pointer-events-auto relative">
+            <a href="{{ url_for('logout') }}"
+                class="btn-primary-glass px-4 py-2 text-sm border border-white/10 shadow-lg backdrop-blur-md hover:bg-red-500/20 hover:border-red-500 transition-colors cursor-pointer block relative">
+                Logout
+            </a>
+            <button @click="showFilters = !showFilters"
+                class="btn-secondary-glass flex items-center gap-2 text-sm px-4 py-2 border border-white/10 shadow-lg backdrop-blur-md cursor-pointer relative">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
+                    </path>
+                </svg>
+                <span x-text="showFilters ? 'Hide Settings' : 'Settings'"></span>
+            </button>
+        </div>
     </div>
 
     <!-- Main Content Area (Centered) -->
@@ -84,11 +92,20 @@
                     <div class="text-2xl font-bold text-red-400 leading-none" x-text="absentCount">0</div>
                 </div>
                 <div class="w-px h-8 bg-white/10"></div>
-                <div>
-                    <div class="text-[10px] text-white/50 uppercase font-bold tracking-wider mb-0.5">Progress</div>
-                    <div class="text-xl font-mono text-white leading-none">
-                        <span x-text="currentIndex + 1"></span><span class="text-white/30">/</span><span
-                            x-text="totalStudents"></span>
+                <div class="flex flex-col gap-1 min-w-[120px]">
+                    <div class="flex justify-between items-end mb-1">
+                        <div class="text-[10px] text-white/50 uppercase font-bold tracking-wider">Progress</div>
+                        <div class="text-[10px] font-mono text-white/80">
+                            <span x-text="Math.round(((currentIndex + 1) / totalStudents) * 100)"></span>%
+                        </div>
+                    </div>
+                    <!-- Visual Progress Track -->
+                    <div class="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+                        <div class="h-full bg-gradient-to-r from-primary-400 to-purple-500 transition-all duration-300 ease-out"
+                            :style="`width: ${((currentIndex + 1) / totalStudents) * 100}%`"></div>
+                    </div>
+                    <div class="text-[10px] text-white/30 text-right mt-0.5">
+                        <span x-text="currentIndex + 1"></span> / <span x-text="totalStudents"></span>
                     </div>
                 </div>
             </div>
@@ -146,19 +163,27 @@
                 </div>
 
                 {% if not is_elective %}
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">Start
-                            Roll</label>
-                        <input type="number" name="start_roll" x-model="startRoll"
-                            class="form-input-glass w-full text-center tracking-widest font-mono" placeholder="101">
+                <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+                    <label class="block text-xs font-bold text-white/40 uppercase tracking-widest text-center mb-4">Roll
+                        Number Range</label>
+                    <div class="flex items-center gap-4">
+                        <div class="flex-1">
+                            <input type="number" name="start_roll" x-model="startRoll"
+                                class="form-input-glass w-full text-center text-xl font-mono tracking-widest py-3"
+                                placeholder="Start">
+                        </div>
+                        <div class="text-white/20 font-bold">to</div>
+                        <div class="flex-1">
+                            <input type="number" name="end_roll" x-model="endRoll"
+                                class="form-input-glass w-full text-center text-xl font-mono tracking-widest py-3"
+                                placeholder="End">
+                        </div>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">End
-                            Roll</label>
-                        <input type="number" name="end_roll" x-model="endRoll"
-                            class="form-input-glass w-full text-center tracking-widest font-mono" placeholder="150">
-                    </div>
+                </div>
+                {% else %}
+                <div class="bg-white/5 rounded-xl p-6 border border-white/5 text-center">
+                    <p class="text-white/60 text-sm">Loading students for subject:</p>
+                    <p class="text-primary-400 font-bold text-lg mt-1">{{ user.subject }}</p>
                 </div>
                 {% endif %}
 
@@ -200,4 +225,5 @@
         </div>
     </div>
 </div>
+{% endblock %}
 {% endblock %}
