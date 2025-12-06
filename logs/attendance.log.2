@@ -1,98 +1,70 @@
-2025-12-06 10:21:37,279 ERROR: Exception on /save_attendance [POST] [in C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask\app.py:875]
-Traceback (most recent call last):
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\local.py", line 292, in _get_current_object
-    return object.__getattribute__(self, '__thing')
-           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
-AttributeError: 'PromiseProxy' object has no attribute '__thing'
-
-During handling of the above exception, another exception occurred:
-
-Traceback (most recent call last):
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask\app.py", line 1511, in wsgi_app
-    response = self.full_dispatch_request()
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask\app.py", line 919, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask\app.py", line 917, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask\app.py", line 902, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask_login\utils.py", line 290, in decorated_view
-    return current_app.ensure_sync(func)(*args, **kwargs)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
-  File "E:\SEM-6\Personal\attendance\app.py", line 349, in save_attendance_session
-    upload_csv_task.delay(filepath, folder_id)
-    ^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\local.py", line 143, in __getattr__
-    return getattr(self._get_current_object(), name)
-                   ~~~~~~~~~~~~~~~~~~~~~~~~^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\local.py", line 294, in _get_current_object
-    return self.__evaluate__()
-           ~~~~~~~~~~~~~~~~~^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\local.py", line 324, in __evaluate__
-    thing = Proxy._get_current_object(self)
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\local.py", line 105, in _get_current_object
-    return loc(*self.__args, **self.__kwargs)
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\app\base.py", line 603, in _task_from_fun
-    task.bind(self)  # connects task to this app
-    ~~~~~~~~~^^^^^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\app\task.py", line 355, in bind
-    setattr(cls, attr_name, conf[config_name])
-                            ~~~~^^^^^^^^^^^^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\utils\collections.py", line 391, in __getitem__
-    return getitem(k)
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\utils\collections.py", line 249, in __getitem__
-    return mapping[_key]
-           ~~~~~~~^^^^^^
-  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\collections\__init__.py", line 1135, in __getitem__
-    if key in self.data:
-              ^^^^^^^^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\kombu\utils\objects.py", line 40, in __get__
-    return super().__get__(instance, owner)
-           ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
-  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.13_3.13.2544.0_x64__qbz5n2kfra8p0\Lib\functools.py", line 1026, in __get__
-    val = self.func(instance)
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\app\base.py", line 227, in data
-    return self.callback()
-           ~~~~~~~~~~~~~^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\app\base.py", line 1130, in _finalize_pending_conf
-    conf = self._conf = self._load_config()
-                        ~~~~~~~~~~~~~~~~~^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\app\base.py", line 1148, in _load_config
-    settings = detect_settings(
-        self.prepare_config(self.loader.conf), self._preconf,
-        ignore_keys=self._preconf_set_by_auto, prefix=self.namespace,
-    )
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\celery\app\utils.py", line 274, in detect_settings
-    raise ImproperlyConfigured(info.mix_error.format(renames='\n'.join(
-    ...<2 lines>...
-    )))
-celery.exceptions.ImproperlyConfigured: 
-
-Cannot mix new and old setting keys, please rename the
-following settings to the new format:
-
-CELERY_RESULT_BACKEND                -> result_backend
-
-
-2025-12-06 10:29:54,409 INFO: Attendance System startup [in E:\SEM-6\Personal\attendance\app.py:53]
-2025-12-06 10:30:10,086 INFO: API /api/students called with params: {'batch': '', 'start_roll': '640', 'end_roll': '644'} [in E:\SEM-6\Personal\attendance\app.py:228]
-2025-12-06 10:30:10,089 INFO: Filtering by roll range: 640 to 644 [in E:\SEM-6\Personal\attendance\app.py:248]
-2025-12-06 10:30:10,103 INFO: Found 5 students [in E:\SEM-6\Personal\attendance\app.py:272]
-2025-12-06 10:32:12,193 INFO: API /api/students called with params: {'batch': 'C3', 'start_roll': '', 'end_roll': ''} [in E:\SEM-6\Personal\attendance\app.py:228]
-2025-12-06 10:32:12,199 INFO: Filtering by batch: C3 [in E:\SEM-6\Personal\attendance\app.py:255]
-2025-12-06 10:32:12,215 INFO: Found 20 students [in E:\SEM-6\Personal\attendance\app.py:272]
-2025-12-06 10:47:17,368 INFO: Attendance System startup [in E:\SEM-6\Personal\attendance\app.py:53]
-2025-12-06 10:47:25,709 INFO: API /api/students called with params: {'batch': 'C3', 'start_roll': '', 'end_roll': ''} [in E:\SEM-6\Personal\attendance\app.py:228]
-2025-12-06 10:47:25,711 INFO: Filtering by batch: C3 [in E:\SEM-6\Personal\attendance\app.py:255]
-2025-12-06 10:47:25,719 INFO: Found 20 students [in E:\SEM-6\Personal\attendance\app.py:272]
-2025-12-06 10:47:43,219 INFO: save_attendance payload: {'slot_name': '7:45-9:35', 'students': [{'enrollment_no': '23010101006', 'status': 'P'}, {'enrollment_no': '23010101007', 'status': 'P'}, {'enrollment_no': '23010101008', 'status': 'P'}, {'enrollment_no': '23010101009', 'status': 'P'}, {'enrollment_no': '23010101010', 'status': 'P'}, {'enrollment_no': '23010101014', 'status': 'P'}, {'enrollment_no': '23010101016', 'status': 'P'}, {'enrollment_no': '23010101017', 'status': 'P'}, {'enrollment_no': '23010101019', 'status': 'P'}, {'enrollment_no': '23010101023', 'status': 'P'}, {'enrollment_no': '23010101024', 'status': 'P'}, {'enrollment_no': '23010101030', 'status': 'P'}, {'enrollment_no': '23010101045', 'status': 'P'}, {'enrollment_no': '23010101046', 'status': 'A'}, {'enrollment_no': '23010101048', 'status': 'P'}, {'enrollment_no': '23010101051', 'status': 'P'}, {'enrollment_no': '23010101052', 'status': 'P'}, {'enrollment_no': '23010101054', 'status': 'P'}, {'enrollment_no': '23010101058', 'status': 'P'}, {'enrollment_no': '23010101067', 'status': 'P'}]} [in E:\SEM-6\Personal\attendance\app.py:301]
-2025-12-06 10:47:43,222 INFO: Resolved slot_name=7:45-9:35 to slot_id=1 [in E:\SEM-6\Personal\attendance\app.py:309]
-2025-12-06 10:47:43,222 INFO: Processing student enrollment_no=23010101006, status=P [in E:\SEM-6\Personal\attendance\app.py:318]
-2025-12-06 10:47:43,227 INFO: Found student: enrollment_no=23010101006, roll_no=630, name=Ajani Keval Kalpeshbhai [in E:\SEM-6\Personal\attendance\app.py:323]
-2025-12-06 10:47:43,228 INFO: Processing student enrollment_no=23010101007, status=P [in E:\SEM-6\Personal\attendance\app.py:318]
-2025-12-06 10:47:43,256 INFO: Found student: enrollment_no=23010101007, roll_no=631, name=Akbari Kishan Kamleshbhai [in E:\SEM-6\Personal\attendance\app.py:323]
-2025-12-06 10:47:43,259 INFO: Processing student enrollment_no=23010101008, status=P [in E:\SEM-6\Personal\attendance\app.py:318]
-2025-12-06 10:47:43,266 INFO: Found student: enrollment_no=23010101008, roll_no=632, name=Akbari Manali Alpeshbhai [in E:\SEM-6\Personal\attendance\app.py:323]
-2025-12-06 10:47:43,268 INFO: Processing student enrollment_no=23010101009, status=P [in E:\SEM-6\Personal\attendance\app.py:318]
-2025-12-06 10:47:43,271 INFO: Found student: enrollment_no=23010101009, roll_no=633, name=Andani Renish Maheshbhai [in E:\SEM-6\Personal\attendance\app.py:323]
+2025-12-06 12:14:45,915 INFO: Processing student enrollment_no=23010101109, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:45,923 INFO: Found student: enrollment_no=23010101109, roll_no=660, name=Jivani Anjali Vasantbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:45,926 INFO: Processing student enrollment_no=23010101111, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:45,931 INFO: Found student: enrollment_no=23010101111, roll_no=661, name=Jogia Kairavi Rupesh [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:45,932 INFO: Processing student enrollment_no=23010101116, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:45,935 INFO: Found student: enrollment_no=23010101116, roll_no=662, name=Jotaniya Meet Sureshbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:45,936 INFO: Processing student enrollment_no=23010101117, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:45,947 INFO: Found student: enrollment_no=23010101117, roll_no=663, name=Kacha Dev Bakulbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:45,951 INFO: Processing student enrollment_no=23010101125, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:45,961 INFO: Found student: enrollment_no=23010101125, roll_no=664, name=Kambariya Vanita Rambhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:45,968 INFO: Processing student enrollment_no=23010101130, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:45,978 INFO: Found student: enrollment_no=23010101130, roll_no=665, name=Karia Parva Manoj [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:45,982 INFO: Processing student enrollment_no=23010101134, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:45,990 INFO: Found student: enrollment_no=23010101134, roll_no=666, name=Kathrani Darshi Maheshbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:45,998 INFO: Processing student enrollment_no=23010101140, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,007 INFO: Found student: enrollment_no=23010101140, roll_no=667, name=Khant Harshkumar Dilipbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,018 INFO: Processing student enrollment_no=23010101141, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,031 INFO: Found student: enrollment_no=23010101141, roll_no=668, name=Kholia Vandan Chirag [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,033 INFO: Processing student enrollment_no=23010101145, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,040 INFO: Found student: enrollment_no=23010101145, roll_no=669, name=Kotecha Manav Amitbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,043 INFO: Processing student enrollment_no=23010101151, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,048 INFO: Found student: enrollment_no=23010101151, roll_no=670, name=Limbad Divyesh Prakashbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,049 INFO: Processing student enrollment_no=23010101152, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,052 INFO: Found student: enrollment_no=23010101152, roll_no=671, name=Lo Nisarg Bharatbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,052 INFO: Processing student enrollment_no=23010101153, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,059 INFO: Found student: enrollment_no=23010101153, roll_no=672, name=Karan Lukka [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,064 INFO: Processing student enrollment_no=23010101154, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,077 INFO: Found student: enrollment_no=23010101154, roll_no=673, name=Machchhar Deven Kishorbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,079 INFO: Processing student enrollment_no=23010101161, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,085 INFO: Found student: enrollment_no=23010101161, roll_no=674, name=Maru Smit Mukeshbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,086 INFO: Processing student enrollment_no=23010101164, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,093 INFO: Found student: enrollment_no=23010101164, roll_no=675, name=Meghapara Krish Shaileshbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,094 INFO: Processing student enrollment_no=23010101167, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,098 INFO: Found student: enrollment_no=23010101167, roll_no=676, name=Mehta Samarth Chirag [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,099 INFO: Processing student enrollment_no=23010101169, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,101 INFO: Found student: enrollment_no=23010101169, roll_no=677, name=Merja Yash Kantilal [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,102 INFO: Processing student enrollment_no=23010101174, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,105 INFO: Found student: enrollment_no=23010101174, roll_no=678, name=Nandasana Shyam Mansukhbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,107 INFO: Processing student enrollment_no=23010101176, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,111 INFO: Found student: enrollment_no=23010101176, roll_no=679, name=Nesadiya Parth Virendrabhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,112 INFO: Processing student enrollment_no=23010101177, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,115 INFO: Found student: enrollment_no=23010101177, roll_no=680, name=Nimavat Mansi Dilipbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,116 INFO: Processing student enrollment_no=23010101178, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,118 INFO: Found student: enrollment_no=23010101178, roll_no=681, name=Odedra Viraj Arjanbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,118 INFO: Processing student enrollment_no=23010101179, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,120 INFO: Found student: enrollment_no=23010101179, roll_no=682, name=Padhiyar Mann Hiteshbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,121 INFO: Processing student enrollment_no=23010101180, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,127 INFO: Found student: enrollment_no=23010101180, roll_no=683, name=Padhiyar Meet Hiteshbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,128 INFO: Processing student enrollment_no=23010101181, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,133 INFO: Found student: enrollment_no=23010101181, roll_no=684, name=Padsumbiya Darshan Rajeshbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,133 INFO: Processing student enrollment_no=23010101182, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,135 INFO: Found student: enrollment_no=23010101182, roll_no=685, name=Padsumbiya Nandani Dharmendrab [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,136 INFO: Processing student enrollment_no=23010101183, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,142 INFO: Found student: enrollment_no=23010101183, roll_no=686, name=Pambhar Meet Nikunjbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,143 INFO: Processing student enrollment_no=23010101184, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,147 INFO: Found student: enrollment_no=23010101184, roll_no=687, name=Malay Mansukh Panara [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,148 INFO: Processing student enrollment_no=23010101189, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,151 INFO: Found student: enrollment_no=23010101189, roll_no=688, name=Parmar Harsh Hareshbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,152 INFO: Processing student enrollment_no=23010101195, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,154 INFO: Found student: enrollment_no=23010101195, roll_no=689, name=Parmar Sahil Nilesh [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,157 INFO: Processing student enrollment_no=23010101199, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,161 INFO: Found student: enrollment_no=23010101199, roll_no=690, name=Patel Ayushi Samitbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,162 INFO: Processing student enrollment_no=23010101200, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,167 INFO: Found student: enrollment_no=23010101200, roll_no=691, name=Patel Balkrushna Manishbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,167 INFO: Processing student enrollment_no=23010101201, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,170 INFO: Found student: enrollment_no=23010101201, roll_no=692, name=Jay Patel [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,170 INFO: Processing student enrollment_no=23010101203, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,177 INFO: Found student: enrollment_no=23010101203, roll_no=693, name=Patel Krishkumar Bharatbhai [in E:\SEM-6\Personal\attendance\app.py:353]
+2025-12-06 12:14:46,178 INFO: Processing student enrollment_no=23010101206, status=P [in E:\SEM-6\Personal\attendance\app.py:348]
+2025-12-06 12:14:46,182 INFO: Found student: enrollment_no=23010101206, roll_no=694, name=Patoliya Yash Chandubhai [in E:\SEM-6\Personal\attendance\app.py:353]

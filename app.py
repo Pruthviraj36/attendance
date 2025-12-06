@@ -15,15 +15,30 @@ from celery_tasks import upload_csv_task, send_bulk_emails_task
 from sqlalchemy import cast, Integer
 import re
 
+COMPULSORY_SUBJECTS = ['OS', 'ATCC', 'FoA']
+ELECTIVE_1_SUBJECTS = ['Information Network Security', 'Machine Learning', 'Machine Learning and DeepLearning']
+ELECTIVE_2_SUBJECTS = [
+    'Flutter', 
+    'Advanced Web Technology', 
+    'UI/UX Designing', 
+    'Building RESTful APIs with ASP.NET Core (Advanced.NET )', 
+    'Advanced .NET Development and Modern Architectures', 
+    'Advanced Flutter'
+]
+
 def sanitize_enrollment_no(value):
     value = str(value).strip()
     if not re.match(r'^[A-Za-z0-9\-_\s]+$', value):
         raise ValueError("Invalid enrollment number")
     return value
 
-def create_app():
+def create_app(test_config=None):
     app = Flask(__name__)
-    app.config.from_object(Config)
+    
+    if test_config:
+        app.config.from_mapping(test_config)
+    else:
+        app.config.from_object(Config)
 
     # Security Headers
     csp = {
@@ -149,7 +164,7 @@ def create_app():
                             flash('Missing required columns: enrollment_no, name, roll_no')
                         else:
                             # Dynamic JSONB fields
-                            std_cols = ['enrollment_no', 'name', 'roll_no', 'email', 'batch', 'semester']
+                            std_cols = ['enrollment_no', 'name', 'roll_no', 'email', 'batch', 'semester', 'elective_1', 'elective_2']
                             extra_cols = [c for c in df.columns if c not in std_cols]
                             
                             for _, row in df.iterrows():
@@ -164,6 +179,8 @@ def create_app():
                                 student.email = row.get('email')
                                 student.batch = row.get('batch')
                                 student.semester = str(row.get('semester', ''))
+                                student.elective_1 = row.get('elective_1')
+                                student.elective_2 = row.get('elective_2')
                                 student.extra_fields = extra_data
                                 
                                 db.session.add(student)
@@ -220,7 +237,8 @@ def create_app():
         semesters = db.session.query(Student.semester).distinct().order_by(Student.semester).all()
         semesters = [s[0] for s in semesters if s[0]] # Flatten and remove None
 
-        return render_template('faculty.html', slots=slots, batches=batches, semesters=semesters, user=current_user)
+        is_elective = current_user.subject in ELECTIVE_1_SUBJECTS or current_user.subject in ELECTIVE_2_SUBJECTS
+        return render_template('faculty.html', slots=slots, batches=batches, semesters=semesters, user=current_user, is_elective=is_elective)
 
     @app.route('/api/students')
     @login_required
@@ -266,6 +284,18 @@ def create_app():
             )
             app.logger.info('Filtering by query: %s', query)
 
+
+        # Subject-based filtering
+        if current_user.subject in COMPULSORY_SUBJECTS:
+            # No additional filtering needed for compulsory subjects
+            pass
+        elif current_user.subject in ELECTIVE_1_SUBJECTS:
+            student_query = student_query.filter(Student.elective_1 == current_user.subject)
+            app.logger.info('Filtering by Elective 1: %s', current_user.subject)
+        elif current_user.subject in ELECTIVE_2_SUBJECTS:
+            student_query = student_query.filter(Student.elective_2 == current_user.subject)
+            app.logger.info('Filtering by Elective 2: %s', current_user.subject)
+        
         # Default loading: if no filters, load all students
         students = student_query.order_by(cast(Student.roll_no, Integer)).all()
 
@@ -371,35 +401,38 @@ def create_app():
     with app.app_context():
         db.create_all()
         
-        # Ensure extra_fields column exists (Auto-migration)
-        try:
-            db.session.execute(db.text("ALTER TABLE students ADD COLUMN IF NOT EXISTS extra_fields JSONB;"))
-            db.session.commit()
-        except Exception as e:
-            app.logger.warning(f"Could not alter table: {e}")
-            db.session.rollback()
+        # Ensure extra_fields column exists (Auto-migration) - Postgres Only
+        if db.engine.dialect.name == 'postgresql':
+            try:
+                db.session.execute(db.text("ALTER TABLE students ADD COLUMN IF NOT EXISTS extra_fields JSONB;"))
+                db.session.execute(db.text("ALTER TABLE students ADD COLUMN IF NOT EXISTS elective_1 VARCHAR(100);"))
+                db.session.execute(db.text("ALTER TABLE students ADD COLUMN IF NOT EXISTS elective_2 VARCHAR(100);"))
+                db.session.commit()
+            except Exception as e:
+                app.logger.warning(f"Could not alter table: {e}")
+                db.session.rollback()
 
-        # Create Trigger Function and Trigger
-        db.session.execute(db.text("""
-            CREATE OR REPLACE FUNCTION update_last_attendance()
-            RETURNS TRIGGER AS $$
-            BEGIN
-                UPDATE students 
-                SET extra_fields = jsonb_set(COALESCE(extra_fields, '{}'::jsonb), '{last_attendance}', to_jsonb(NEW.timestamp))
-                WHERE enrollment_no = NEW.enrollment_no;
-                RETURN NEW;
-            END;
-            $$ LANGUAGE plpgsql;
-        """))
-        
-        db.session.execute(db.text("""
-            DROP TRIGGER IF EXISTS trigger_update_last_attendance ON attendance;
-            CREATE TRIGGER trigger_update_last_attendance
-            AFTER INSERT ON attendance
-            FOR EACH ROW
-            EXECUTE FUNCTION update_last_attendance();
-        """))
-        db.session.commit()
+            # Create Trigger Function and Trigger
+            db.session.execute(db.text("""
+                CREATE OR REPLACE FUNCTION update_last_attendance()
+                RETURNS TRIGGER AS $$
+                BEGIN
+                    UPDATE students 
+                    SET extra_fields = jsonb_set(COALESCE(extra_fields, '{}'::jsonb), '{last_attendance}', to_jsonb(NEW.timestamp))
+                    WHERE enrollment_no = NEW.enrollment_no;
+                    RETURN NEW;
+                END;
+                $$ LANGUAGE plpgsql;
+            """))
+            
+            db.session.execute(db.text("""
+                DROP TRIGGER IF EXISTS trigger_update_last_attendance ON attendance;
+                CREATE TRIGGER trigger_update_last_attendance
+                AFTER INSERT ON attendance
+                FOR EACH ROW
+                EXECUTE FUNCTION update_last_attendance();
+            """))
+            db.session.commit()
 
         # Create Admin if not exists
         if not Faculty.query.filter_by(email='admin@univ.edu').first():

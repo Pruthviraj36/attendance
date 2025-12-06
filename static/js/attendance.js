@@ -71,6 +71,18 @@ function attendanceApp(defaultSlot = 'default') {
                 this.initStudentsList(e.detail);
                 this.showFilters = false;
             });
+            // Auto-load students
+            this.$nextTick(() => {
+                const loadBtn = document.getElementById('load-students-btn');
+                if (loadBtn) {
+                    // Check if htmx is ready, if not wait a bit
+                    if (typeof htmx !== 'undefined') {
+                        htmx.trigger(loadBtn, 'click');
+                    } else {
+                        window.addEventListener('load', () => htmx.trigger(loadBtn, 'click'));
+                    }
+                }
+            });
         },
 
         // Navigation

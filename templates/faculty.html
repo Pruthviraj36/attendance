@@ -141,18 +141,11 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-span-2">
-                        <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">Batch</label>
-                        <select x-model="selectedBatch" name="batch"
-                            class="form-input-glass w-full text-lg bg-[#0f172a] text-white">
-                            <option value="" class="bg-[#0f172a] text-white">All Batches</option>
-                            {% for batch in batches %}
-                            <option value="{{ batch }}" class="bg-[#0f172a] text-white py-2">{{ batch }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+                    <!-- Batch selection removed as per request -->
+                    <input type="hidden" name="batch" value="">
                 </div>
 
+                {% if not is_elective %}
                 <div class="grid grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-white/60 uppercase tracking-wider mb-2">Start
@@ -167,6 +160,7 @@
                             class="form-input-glass w-full text-center tracking-widest font-mono" placeholder="150">
                     </div>
                 </div>
+                {% endif %}
 
                 <div class="pt-2">
                     <button id="load-students-btn" hx-get="/api/students" hx-target="#student-carousel"

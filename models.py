@@ -1,5 +1,6 @@
 from extensions import db
 from flask_login import UserMixin
+from sqlalchemy import JSON
 from sqlalchemy.dialects.postgresql import JSONB
 from datetime import datetime
 from sqlalchemy.orm import validates
@@ -43,7 +44,9 @@ class Student(db.Model):
         return value
 
     semester = db.Column(db.String(10))
-    extra_fields = db.Column(JSONB)
+    elective_1 = db.Column(db.String(100))
+    elective_2 = db.Column(db.String(100))
+    extra_fields = db.Column(JSON().with_variant(JSONB, 'postgresql'))
 
 class Slot(db.Model):
     __tablename__ = 'slots'

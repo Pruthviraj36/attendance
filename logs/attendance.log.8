@@ -1,196 +1,45 @@
-2025-12-06 09:45:08,457 ERROR: Exception on /save_attendance [POST] [in C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask\app.py:875]
-Traceback (most recent call last):
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
-    self.dialect.do_execute(
-    ~~~~~~~~~~~~~~~~~~~~~~~^
-        cursor, str_statement, effective_parameters, context
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\engine\default.py", line 951, in do_execute
-    cursor.execute(statement, parameters)
-    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
-psycopg2.errors.UndefinedColumn: column "extra_fields" does not exist
-LINE 2: ...            SET extra_fields = jsonb_set(COALESCE(extra_fiel...
-                                                             ^
-QUERY:  UPDATE students 
-                SET extra_fields = jsonb_set(COALESCE(extra_fields, '{}'::jsonb), '{last_attendance}', to_jsonb(NEW.timestamp))
-                WHERE enrollment_no = NEW.enrollment_no
-CONTEXT:  PL/pgSQL function update_last_attendance() line 3 at SQL statement
-
-
-The above exception was the direct cause of the following exception:
-
-Traceback (most recent call last):
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask\app.py", line 1511, in wsgi_app
-    response = self.full_dispatch_request()
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask\app.py", line 919, in full_dispatch_request
-    rv = self.handle_user_exception(e)
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask\app.py", line 917, in full_dispatch_request
-    rv = self.dispatch_request()
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask\app.py", line 902, in dispatch_request
-    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\flask_login\utils.py", line 290, in decorated_view
-    return current_app.ensure_sync(func)(*args, **kwargs)
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
-  File "E:\SEM-6\Personal\attendance\app.py", line 306, in save_attendance_session
-    student = Student.query.get(s['enrollment_no'])
-  File "<string>", line 2, in get
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\util\deprecations.py", line 386, in warned
-    return fn(*args, **kwargs)  # type: ignore[no-any-return]
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\query.py", line 1126, in get
-    return self._get_impl(ident, loading.load_on_pk_identity)
-           ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\query.py", line 1135, in _get_impl
-    return self.session._get_impl(
-           ~~~~~~~~~~~~~~~~~~~~~~^
-        mapper,
-        ^^^^^^^
-    ...<6 lines>...
-        execution_options=self._execution_options,
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\session.py", line 3859, in _get_impl
-    return db_load_fn(
-        self,
-    ...<5 lines>...
-        bind_arguments=bind_arguments,
-    )
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\loading.py", line 695, in load_on_pk_identity
-    session.execute(
-    ~~~~~~~~~~~~~~~^
-        q,
-        ^^
-    ...<2 lines>...
-        bind_arguments=bind_arguments,
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\session.py", line 2351, in execute
-    return self._execute_internal(
-           ~~~~~~~~~~~~~~~~~~~~~~^
-        statement,
-        ^^^^^^^^^^
-    ...<4 lines>...
-        _add_event=_add_event,
-        ^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\session.py", line 2228, in _execute_internal
-    ) = compile_state_cls.orm_pre_session_exec(
-        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
-        self,
-        ^^^^^
-    ...<4 lines>...
-        False,
-        ^^^^^^
-    )
-    ^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\context.py", line 577, in orm_pre_session_exec
-    session._autoflush()
-    ~~~~~~~~~~~~~~~~~~^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\session.py", line 3051, in _autoflush
-    raise e.with_traceback(sys.exc_info()[2])
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\session.py", line 3040, in _autoflush
-    self.flush()
-    ~~~~~~~~~~^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\session.py", line 4331, in flush
-    self._flush(objects)
-    ~~~~~~~~~~~^^^^^^^^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\session.py", line 4466, in _flush
-    with util.safe_reraise():
-         ~~~~~~~~~~~~~~~~~^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\util\langhelpers.py", line 224, in __exit__
-    raise exc_value.with_traceback(exc_tb)
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\session.py", line 4427, in _flush
-    flush_context.execute()
-    ~~~~~~~~~~~~~~~~~~~~~^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\unitofwork.py", line 466, in execute
-    rec.execute(self)
-    ~~~~~~~~~~~^^^^^^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\unitofwork.py", line 642, in execute
-    util.preloaded.orm_persistence.save_obj(
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
-        self.mapper,
-        ^^^^^^^^^^^^
-        uow.states_for_mapper_hierarchy(self.mapper, False, False),
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-        uow,
-        ^^^^
-    )
-    ^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\persistence.py", line 93, in save_obj
-    _emit_insert_statements(
-    ~~~~~~~~~~~~~~~~~~~~~~~^
-        base_mapper,
-        ^^^^^^^^^^^^
-    ...<3 lines>...
-        insert,
-        ^^^^^^^
-    )
-    ^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\orm\persistence.py", line 1233, in _emit_insert_statements
-    result = connection.execute(
-        statement,
-        params,
-        execution_options=execution_options,
-    )
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\engine\base.py", line 1419, in execute
-    return meth(
-        self,
-        distilled_parameters,
-        execution_options or NO_OPTIONS,
-    )
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\sql\elements.py", line 526, in _execute_on_connection
-    return connection._execute_clauseelement(
-           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
-        self, distilled_params, execution_options
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\engine\base.py", line 1641, in _execute_clauseelement
-    ret = self._execute_context(
-        dialect,
-    ...<8 lines>...
-        cache_hit=cache_hit,
-    )
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\engine\base.py", line 1846, in _execute_context
-    return self._exec_single_context(
-           ~~~~~~~~~~~~~~~~~~~~~~~~~^
-        dialect, context, statement, parameters
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\engine\base.py", line 1986, in _exec_single_context
-    self._handle_dbapi_exception(
-    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^
-        e, str_statement, effective_parameters, cursor, context
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\engine\base.py", line 2355, in _handle_dbapi_exception
-    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\engine\base.py", line 1967, in _exec_single_context
-    self.dialect.do_execute(
-    ~~~~~~~~~~~~~~~~~~~~~~~^
-        cursor, str_statement, effective_parameters, context
-        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-    )
-    ^
-  File "C:\Users\chauh\AppData\Local\Packages\PythonSoftwareFoundation.Python.3.13_qbz5n2kfra8p0\LocalCache\local-packages\Python313\site-packages\sqlalchemy\engine\default.py", line 951, in do_execute
-    cursor.execute(statement, parameters)
-    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
-sqlalchemy.exc.ProgrammingError: (raised as a result of Query-invoked autoflush; consider using a session.no_autoflush block if this flush is occurring prematurely)
-(psycopg2.errors.UndefinedColumn) column "extra_fields" does not exist
-LINE 2: ...            SET extra_fields = jsonb_set(COALESCE(extra_fiel...
-                                                             ^
-QUERY:  UPDATE students 
-                SET extra_fields = jsonb_set(COALESCE(extra_fields, '{}'::jsonb), '{last_attendance}', to_jsonb(NEW.timestamp))
-                WHERE enrollment_no = NEW.enrollment_no
-CONTEXT:  PL/pgSQL function update_last_attendance() line 3 at SQL statement
-
-[SQL: INSERT INTO attendance (faculty_id, enrollment_no, slot_id, subject, timestamp, status) VALUES (%(faculty_id)s, %(enrollment_no)s, %(slot_id)s, %(subject)s, %(timestamp)s, %(status)s) RETURNING attendance.id]
-[parameters: {'faculty_id': 2, 'enrollment_no': '23010101006', 'slot_id': 1, 'subject': 'MLDL', 'timestamp': datetime.datetime(2025, 12, 6, 9, 45, 8, 359656), 'status': 'P'}]
-(Background on this error at: https://sqlalche.me/e/20/f405)
+2025-12-06 10:57:50,053 INFO: Found student: enrollment_no=23010101045, roll_no=642, name=Chauhan Jasmin Rajeshbhai [in E:\SEM-6\Personal\attendance\app.py:323]
+2025-12-06 10:57:50,062 INFO: Processing student enrollment_no=23010101046, status=A [in E:\SEM-6\Personal\attendance\app.py:318]
+2025-12-06 10:57:50,068 INFO: Found student: enrollment_no=23010101046, roll_no=643, name=Chauhan Pruthviraj Bhaveshbhai [in E:\SEM-6\Personal\attendance\app.py:323]
+2025-12-06 10:57:50,069 INFO: Processing student enrollment_no=23010101048, status=P [in E:\SEM-6\Personal\attendance\app.py:318]
+2025-12-06 10:57:50,072 INFO: Found student: enrollment_no=23010101048, roll_no=644, name=Rudra Chavda [in E:\SEM-6\Personal\attendance\app.py:323]
+2025-12-06 10:57:50,075 INFO: Processing student enrollment_no=23010101051, status=P [in E:\SEM-6\Personal\attendance\app.py:318]
+2025-12-06 10:57:50,081 INFO: Found student: enrollment_no=23010101051, roll_no=645, name=Chotai Dhruv Kamleshbhai [in E:\SEM-6\Personal\attendance\app.py:323]
+2025-12-06 10:57:50,082 INFO: Processing student enrollment_no=23010101052, status=P [in E:\SEM-6\Personal\attendance\app.py:318]
+2025-12-06 10:57:50,087 INFO: Found student: enrollment_no=23010101052, roll_no=646, name=Priyanshu Choudhary [in E:\SEM-6\Personal\attendance\app.py:323]
+2025-12-06 10:57:50,088 INFO: Processing student enrollment_no=23010101054, status=P [in E:\SEM-6\Personal\attendance\app.py:318]
+2025-12-06 10:57:50,098 INFO: Found student: enrollment_no=23010101054, roll_no=647, name=Dafda Disha Ketanbhai [in E:\SEM-6\Personal\attendance\app.py:323]
+2025-12-06 10:57:50,098 INFO: Processing student enrollment_no=23010101058, status=P [in E:\SEM-6\Personal\attendance\app.py:318]
+2025-12-06 10:57:50,102 INFO: Found student: enrollment_no=23010101058, roll_no=648, name=Desai Jineesh Shaileshkumar [in E:\SEM-6\Personal\attendance\app.py:323]
+2025-12-06 10:57:50,103 INFO: Processing student enrollment_no=23010101067, status=P [in E:\SEM-6\Personal\attendance\app.py:318]
+2025-12-06 10:57:50,106 INFO: Found student: enrollment_no=23010101067, roll_no=649, name=Dev Dobariya [in E:\SEM-6\Personal\attendance\app.py:323]
+2025-12-06 10:57:50,108 INFO: Processed 20 students, 20 attendance records added [in E:\SEM-6\Personal\attendance\app.py:355]
+2025-12-06 11:13:53,575 INFO: Attendance System startup [in e:\SEM-6\Personal\attendance\app.py:57]
+2025-12-06 11:14:22,414 INFO: Attendance System startup [in e:\SEM-6\Personal\attendance\app.py:61]
+2025-12-06 11:14:54,719 INFO: Attendance System startup [in e:\SEM-6\Personal\attendance\app.py:61]
+2025-12-06 11:14:54,724 WARNING: Could not alter table: (sqlite3.OperationalError) near "EXISTS": syntax error
+[SQL: ALTER TABLE students ADD COLUMN IF NOT EXISTS extra_fields JSONB;]
+(Background on this error at: https://sqlalche.me/e/20/e3q8) [in e:\SEM-6\Personal\attendance\app.py:403]
+2025-12-06 11:15:12,868 INFO: Attendance System startup [in e:\SEM-6\Personal\attendance\app.py:61]
+2025-12-06 11:56:43,071 INFO: Attendance System startup [in e:\SEM-6\Personal\attendance\app.py:68]
+2025-12-06 11:56:58,499 INFO: Attendance System startup [in e:\SEM-6\Personal\attendance\app.py:68]
+2025-12-06 11:57:21,325 INFO: Attendance System startup [in E:\SEM-6\Personal\attendance\app.py:68]
+2025-12-06 12:00:39,589 INFO: Attendance System startup [in E:\SEM-6\Personal\attendance\app.py:68]
+2025-12-06 12:00:50,889 INFO: API /api/students called with params: {'batch': ''} [in E:\SEM-6\Personal\attendance\app.py:246]
+2025-12-06 12:00:50,890 INFO: Filtering by Elective 2: Advanced Web Technology [in E:\SEM-6\Personal\attendance\app.py:297]
+2025-12-06 12:00:50,897 INFO: Found 1 students [in E:\SEM-6\Personal\attendance\app.py:302]
+2025-12-06 12:00:50,935 INFO: API /api/students called with params: {'batch': ''} [in E:\SEM-6\Personal\attendance\app.py:246]
+2025-12-06 12:00:50,938 INFO: Filtering by Elective 2: Advanced Web Technology [in E:\SEM-6\Personal\attendance\app.py:297]
+2025-12-06 12:00:50,943 INFO: Found 1 students [in E:\SEM-6\Personal\attendance\app.py:302]
+2025-12-06 12:09:52,996 INFO: API /api/students called with params: {'batch': ''} [in E:\SEM-6\Personal\attendance\app.py:246]
+2025-12-06 12:09:52,997 INFO: Filtering by Elective 2: Advanced Web Technology [in E:\SEM-6\Personal\attendance\app.py:297]
+2025-12-06 12:09:52,998 INFO: Found 1 students [in E:\SEM-6\Personal\attendance\app.py:302]
+2025-12-06 12:09:53,034 INFO: API /api/students called with params: {'batch': ''} [in E:\SEM-6\Personal\attendance\app.py:246]
+2025-12-06 12:09:53,038 INFO: Filtering by Elective 2: Advanced Web Technology [in E:\SEM-6\Personal\attendance\app.py:297]
+2025-12-06 12:09:53,044 INFO: Found 1 students [in E:\SEM-6\Personal\attendance\app.py:302]
+2025-12-06 12:12:00,104 INFO: API /api/students called with params: {'batch': ''} [in E:\SEM-6\Personal\attendance\app.py:246]
+2025-12-06 12:12:00,106 INFO: Filtering by Elective 2: Advanced Web Technology [in E:\SEM-6\Personal\attendance\app.py:297]
+2025-12-06 12:12:00,114 INFO: Found 210 students [in E:\SEM-6\Personal\attendance\app.py:302]
+2025-12-06 12:12:00,172 INFO: API /api/students called with params: {'batch': ''} [in E:\SEM-6\Personal\attendance\app.py:246]
+2025-12-06 12:12:00,174 INFO: Filtering by Elective 2: Advanced Web Technology [in E:\SEM-6\Personal\attendance\app.py:297]
+2025-12-06 12:12:00,180 INFO: Found 210 students [in E:\SEM-6\Personal\attendance\app.py:302]
